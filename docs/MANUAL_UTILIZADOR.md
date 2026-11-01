@@ -1,114 +1,89 @@
-# 📖 Manual do Utilizador: Tic-Tac-Toe AI
+# Manual de Utilizador: Tic-Tac-Toe AI
 
-Bem-vindo ao **Tic-Tac-Toe AI**, o clássico Jogo do Galo reinventado com uma interface moderna e Inteligência Artificial!
+Guia de instalação, configuração e utilização da aplicação Tic-Tac-Toe AI.
 
 ---
 
-## 1. Requisitos do Sistema
-- **Sistema Operativo**: Windows 10/11, macOS ou Linux.
-- **Python**: Versão 3.10 ou superior instalada.
-- **Navegador Web**: Google Chrome, Mozilla Firefox, Microsoft Edge ou Safari.
-- *(Opcional)* **Ollama**: Para utilizar modelos de linguagem locais (como `llama3.2`, `mistral` ou `phi3`). Se o Ollama não estiver instalado ou ativo, o jogo utiliza automaticamente o motor Minimax integrado.
+## 1. Requisitos de Sistema
+- Sistema Operativo: Windows 10/11, macOS ou Linux.
+- Python: Versão 3.10 ou superior.
+- Navegador de Internet: Google Chrome, Microsoft Edge, Mozilla Firefox ou Safari.
+- (Opcional) Ollama: Para inferência de linguagem natural através de modelos locais.
 
 ---
 
 ## 2. Instalação e Execução
 
-### Passo 1: Abrir o Terminal
-Aceda à pasta do projeto no PowerShell ou Terminal:
+### Passo 1: Aceder ao Diretório do Projeto
+No terminal (PowerShell ou Bash):
 ```powershell
 cd C:\Users\angel\nicegui_demo
 ```
 
 ### Passo 2: Instalar as Dependências
-Instale as bibliotecas necessárias com um único comando:
+Execute o instalador de pacotes:
 ```powershell
 pip install -r requirements.txt
 ```
 
-### Passo 3: Iniciar o Jogo
-Execute a aplicação Python:
+### Passo 3: Executar a Aplicação
+Inicie o servidor local:
 ```powershell
 python main.py
 ```
 
-### Passo 4: Aceder à Interface
-Abra o seu navegador de internet no seguinte endereço:
-👉 **[http://localhost:8080](http://localhost:8080)**
+### Passo 4: Abrir a Interface Web
+Abra o navegador e aceda ao endereço:
+http://localhost:8080
 
 ---
 
-## 3. Guia de Funcionalidades da Interface
+## 3. Descrição da Interface
 
-A aplicação organiza-se em 4 abas principais no topo do ecrã:
+A aplicação organiza-se em quatro secções acessíveis através do menu superior:
 
-### 🎮 1. Aba "Jogo"
-- **Tabuleiro 3x3 Interativo**:
-  - Clique em qualquer célula vazia para colocar o seu símbolo (`X`, azul).
-  - A Inteligência Artificial responderá automaticamente com o símbolo (`O`, rosa/roxo).
-- **Mente da IA (Diálogos Dinâmicos)**:
-  - Abaixo ou ao lado do tabuleiro, a IA expressa os seus "pensamentos" e comentários provocatórios através de um balão de fala.
-  - Um badge indica se a jogada foi gerada pelo modelo **Ollama** ou pelo algoritmo **Minimax**.
-- **Placar em Tempo Real**:
-  - Exibe instantaneamente as suas Vitórias, Derrotas e Empates acumulados.
-- **Botão "Nova Partida"**:
-  - Reinicia o tabuleiro a qualquer momento mantendo o histórico de pontuação.
+### 3.1 Jogo
+- **Área de Tabuleiro**: Grelha 3x3 onde cada clique executa a jogada do jogador humano (símbolo X).
+- **Resposta da IA**: A jogada do computador (símbolo O) é calculada e preenchida de forma automática.
+- **Painel de Feedback**: Exibe o comentário produzido pelo modelo (ou algoritmo) e indica o motor utilizado no lance.
+- **Placar**: Contador de vitórias, derrotas e empates obtidos na sessão.
+- **Botão Nova Partida**: Limpa o tabuleiro e inicia um novo jogo sem reiniciar as estatísticas.
 
----
+### 3.2 Estatísticas
+- **Gráfico de Resultados**: Representação gráfica da distribuição de vitórias, derrotas e empates.
+- **Tabela de Partidas Recentes**: Lista detalhada das partidas jogadas, incluindo data, vencedor, número de jogadas e tempo total.
+- **Botão Atualizar**: Recarrega os registos mais recentes.
 
-### 📊 2. Aba "Estatísticas & Gráficos"
-- **Gráfico Interativo de Pizza (ECharts)**:
-  - Apresenta a percentagem e distribuição visual de vitórias suas vs. vitórias da IA vs. empates.
-- **Tabela de Partidas Recentes**:
-  - Registo detalhado das últimas partidas com data/hora, vencedor, número de jogadas e motor utilizado.
-- **Botão "Atualizar Dados"**:
-  - Atualiza as visualizações caso tenham sido jogadas novas partidas.
+### 3.3 Histórico e Ficheiros
+- Permite inspecionar diretamente os dados guardados em disco:
+  - Ficheiro textual de log (`game_history.txt`).
+  - Ficheiro tabular de métricas (`matches.csv`).
 
----
-
-### 📜 3. Aba "Histórico & Ficheiros"
-- Permite inspecionar em tempo real os ficheiros persistentes criados pelo sistema:
-  - **`game_history.txt`**: Registo legível em texto corrido com data, jogadas e duração de cada partida.
-  - **`matches.csv`**: Ficheiro de métricas estruturadas compatível com Excel e ferramentas de análise.
+### 3.4 Configurações
+- **Nome do Jogador**: Permite alterar o identificador associado às estatísticas.
+- **Estilo de Resposta da IA**: Seleção entre os perfis Sarcástico, Amigável e Analítico.
+- **Nível do Motor Minimax**: Ajuste da dificuldade heurística (Fácil, Médio, Imbatível).
+- **Endereço e Modelo Ollama**: Configuração do endpoint HTTP e nome do modelo local.
+- **Testar Conexão**: Verifica a disponibilidade do serviço Ollama na rede local.
 
 ---
 
-### ⚙️ 4. Aba "Configurações"
-- **Nome do Jogador**: Personalize o seu nome que surgirá nas partidas e no histórico.
-- **Personalidade da IA**:
-  - *Sarcástico*: Provocações com humor negro.
-  - *Amigável*: Comentários simpáticos e encorajadores.
-  - *Científico*: Análise fria e probabilidades matemáticas.
-- **Dificuldade Minimax**:
-  - *Fácil*: Comete erros com frequência.
-  - *Médio*: Jogador casual equilibrado.
-  - *Imbatível*: Joga sempre de forma matematicamente ótima.
-- **Parâmetros Ollama**:
-  - Permite configurar o endereço (`http://localhost:11434`) e o nome do modelo (ex: `llama3.2`, `mistral`).
-  - O botão **"Guardar e Testar Conexão"** verifica se o serviço Ollama está a responder.
-- **Tema Escuro / Claro**:
-  - Alterne entre o modo escuro e claro clicando no ícone no canto superior direito.
+## 4. Configuração Opcional do Ollama
 
----
-
-## 4. (Opcional) Como Ativar o Ollama no seu PC
-
-Se quiser ver os comentários gerados em tempo real pelo modelo generativo:
-1. Descarregue e instale o Ollama em [ollama.com](https://ollama.com).
-2. No seu terminal, descarregue um modelo leve (exemplo):
+Caso pretenda utilizar modelos de linguagem locais para os comentários e jogadas:
+1. Instale o Ollama a partir do site oficial (https://ollama.com).
+2. Transfira o modelo pretendido no seu terminal:
    ```powershell
-   ollama run llama3.2
+   ollama pull llama3.2
    ```
-3. Aceda à aba **⚙️ Configurações** na aplicação e clique em **"Guardar e Testar Conexão"**.
-4. O badge no cabeçalho mudará para **"Ollama Online"**!
+3. Na aba Configurações da aplicação, certifique-se de que o campo do modelo coincide com o modelo descarregado e clique em "Guardar e Testar Conexão".
+4. Caso o Ollama não esteja em execução, a aplicação continua totalmente funcional através do motor algorítmico Minimax.
 
 ---
 
-## 5. Resolução de Problemas (FAQ)
+## 5. Execução de Testes Automatizados
 
-- **A aplicação diz "Ollama Offline", posso jogar na mesma?**
-  - **Sim!** O sistema possui fallback automático. Se o Ollama não estiver a correr, o motor algorítmico Minimax assume o controlo das jogadas de forma transparente.
-- **Onde ficam gravados os meus dados?**
-  - Ficam guardados localmente na pasta `data/` do projeto (`data/logs`, `data/metrics`, `data/config` e `data/db`).
-- **Como correr os testes de verificação?**
-  - Execute: `python -m unittest discover -s tests` no terminal.
+Para validar o funcionamento de todos os módulos e regras do sistema:
+```powershell
+python -m unittest discover -s tests
+```

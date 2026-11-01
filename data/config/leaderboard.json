@@ -1,6 +1,6 @@
 {
-    "player_wins": 1,
+    "player_wins": 2,
     "ai_wins": 0,
-    "draws": 0,
-    "total_games": 1
+    "draws": 1,
+    "total_games": 3
 }

@@ -1,65 +1,62 @@
-# 🎮 Tic-Tac-Toe AI (Jogo do Galo com IA)
+# Tic-Tac-Toe AI (Jogo do Galo)
 
-Uma aplicação interativa de Jogo do Galo desenvolvida em **Python** e **NiceGUI**, com motor híbrido de Inteligência Artificial (**Ollama LLM** + **Minimax**) e persistência poliglota (**TXT, CSV, JSON e SQLite**).
+Aplicação modular de Jogo do Galo desenvolvida em Python com interface gráfica NiceGUI, integração com modelo de linguagem local via Ollama e motor de busca Minimax, suportando persistência multi-formato (TXT, CSV, JSON e SQLite).
 
 ---
 
-## 🚀 Como Executar
+## Requisitos de Sistema
 
-1. **Instalar dependências**:
+- Python 3.10 ou superior
+- Navegador web moderno (Chrome, Edge, Firefox)
+- (Opcional) Instalação local do Ollama para inferência de linguagem natural
+
+---
+
+## Instalação e Execução
+
+1. Instalar as dependências do projeto:
    ```powershell
    pip install -r requirements.txt
    ```
 
-2. **Iniciar o jogo**:
+2. Iniciar a aplicação:
    ```powershell
    python main.py
    ```
 
-3. **Abrir no browser**:
-   Aceda a [http://localhost:8080](http://localhost:8080).
+3. Aceder via browser:
+   [http://localhost:8080](http://localhost:8080)
 
-4. **Correr a suite de testes automatizados**:
+4. Executar os testes unitários automatizados:
    ```powershell
    python -m unittest discover -s tests
    ```
 
 ---
 
-## 📋 Requisitos Técnicos Cumpridos
+## Arquitetura e Módulos
 
-- ✅ **Implementação em Python** (3.10+)
-- ✅ **Programação Modular**:
-  - `core/board.py`: Lógica do tabuleiro, validações e regras de jogo.
-  - `core/exceptions.py`: Hierarquia de exceções personalizadas (`InvalidMoveError`, `PositionOccupiedError`, etc.).
-  - `ai/ollama_engine.py`: Integração com API Ollama e tratamento de fallback.
-  - `ai/minimax.py`: Algoritmo Minimax com níveis de dificuldade.
-  - `storage/persistence.py`: Gestão de persistência multi-formato.
-  - `main.py`: Interface gráfica reativa.
-- ✅ **Estruturas de Dados Adequadas**: Matrizes 3x3, tuplos de coordenadas, dicionários de estado, dataclasses e listas dinâmicas.
-- ✅ **Validação de Dados e Tratamento de Exceções**: Verificação de limites, casas ocupadas, sanitização de inputs e tolerância a falhas na API.
-- ✅ **Armazenamento Persistente Multi-formato**:
-  - Ficheiros de texto (`data/logs/game_history.txt`)
-  - Ficheiros CSV (`data/metrics/matches.csv`)
-  - Ficheiros JSON (`data/config/settings.json` e `leaderboard.json`)
-- ✅ **GitHub durante todo o desenvolvimento**: Commits modulares e estruturados.
-- ✅ **Documentação Completa**:
-  - [Documentação Técnica](docs/DOCUMENTACAO_TECNICA.md)
-  - [Manual do Utilizador](docs/MANUAL_UTILIZADOR.md)
+- `core/`: Regras do jogo, gestão de estado do tabuleiro e validações.
+  - `board.py`: Classe principal `Board`, matriz 3x3 e verificação de condições de término.
+  - `exceptions.py`: Hierarquia de exceções personalizadas (`InvalidMoveError`, `PositionOccupiedError`, etc.).
+- `ai/`: Motores de decisão para o adversário automático.
+  - `ollama_engine.py`: Comunicação com a API REST local do Ollama e parsing de formato estruturado.
+  - `minimax.py`: Algoritmo Minimax determinístico com diferentes níveis de dificuldade.
+- `storage/`: Persistência de dados poliglota.
+  - `persistence.py`: Escrita e leitura estruturada em ficheiros de texto simples (.txt), formato tabular (.csv), configurações (.json) e base de dados relacional SQLite (.db).
+- `tests/`: Suite de testes automatizados com cobertura de regras e persistência.
+  - `test_board.py`: Testes unitários para a lógica do tabuleiro e exceções.
+  - `test_persistence.py`: Testes unitários para as operações de I/O de dados.
+- `docs/`: Documentação do projeto.
+  - `DOCUMENTACAO_TECNICA.md`: Especificação técnica de arquitetura, fluxo e estruturas de dados.
+  - `MANUAL_UTILIZADOR.md`: Manual operacional de utilização do sistema.
 
 ---
 
-## ⭐ Elementos de Valorização Implementados
+## Persistência de Dados
 
-- ⭐ **Interface Gráfica**: NiceGUI moderna, responsiva, com abas e suporte a modo claro/escuro.
-- ⭐ **Integração com APIs**: Cliente para a API local do Ollama (`http://localhost:11434`).
-- ⭐ **Visualização Gráfica de Dados**: Gráficos dinâmicos com **ECharts** incorporado.
-- ⭐ **Base de Dados**: Base de dados relacional **SQLite** (`data/db/tictactoe.db`).
-- ⭐ **Funcionalidades de IA**: Personalidades conversacionais da IA (Sarcástico, Amigável, Científico) + comentários das jogadas.
-- ⭐ **Testes Automatizados**: Suite com 13 testes unitários cobrindo lógica e persistência.
-
----
-
-## 📚 Documentação
-- Consulte [`docs/DOCUMENTACAO_TECNICA.md`](docs/DOCUMENTACAO_TECNICA.md) para detalhes de arquitetura.
-- Consulte [`docs/MANUAL_UTILIZADOR.md`](docs/MANUAL_UTILIZADOR.md) para guia passo a passo de utilização.
+- `data/logs/game_history.txt`: Registo descritivo de cada partida finalizada.
+- `data/metrics/matches.csv`: Tabela cronológica com identificador, timestamp, vencedor, jogadas e duração.
+- `data/config/settings.json`: Preferências do utilizador (modelo, tema, personalidade).
+- `data/config/leaderboard.json`: Agregado de vitórias, derrotas e empates.
+- `data/db/tictactoe.db`: Base de dados relacional SQLite com registo persistente de partidas.

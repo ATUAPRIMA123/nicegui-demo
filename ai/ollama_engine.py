@@ -1,7 +1,7 @@
 """
 Módulo de Integração com Ollama (LLM)
-Efetua pedidos à API do Ollama para gerar jogadas estratégicas e comentários em linguagem natural.
-Inclui tratamento rigoroso de exceções e fallback automático para Minimax.
+Efetua pedidos à API do Ollama para gerar jogadas estratégicas e comentários contextuais.
+Inclui tratamento de exceções e fallback para o motor Minimax.
 """
 
 import json
@@ -22,9 +22,9 @@ class OllamaAIEngine:
     DEFAULT_MODEL = "llama3.2"
 
     PERSONALITIES = {
-        "Sarcástico": "És um jogador de Jogo do Galo arrogante, sarcástico e com humor ácido. Faz provocações curtas e engraçadas ao utilizador.",
-        "Amigável": "És um jogador amigável, encorajador e simpático que adora ensinar xadrez e jogos de tabuleiro.",
-        "Científico": "És um supercomputador frio e calculista que fala de probabilidades, lógica booleana e entropia.",
+        "Sarcástico": "És um jogador experiente de Jogo do Galo. Faz comentários breves e irónicos sobre o jogo.",
+        "Amigável": "És um jogador cordial e positivo. Faz comentários encorajadores e breves.",
+        "Analítico": "És um jogador focado em estratégia e probabilidade. Faz comentários concisos sobre a posição.",
     }
 
     def __init__(self, host: str = DEFAULT_HOST, model: str = DEFAULT_MODEL):
@@ -37,18 +37,18 @@ class OllamaAIEngine:
         Retorna (is_online, available_models, status_message).
         """
         try:
-            req = urllib.request.Request(f"{self.host}/api/tags", headers={"User-Agent": "NiceGUI-TicTacToe"})
-            with urllib.request.urlopen(req, timeout=2.5) as response:
+            req = urllib.request.Request(f"{self.host}/api/tags", headers={"User-Agent": "TicTacToe-Client"})
+            with urllib.request.urlopen(req, timeout=2.0) as response:
                 if response.status == 200:
                     data = json.loads(response.read().decode('utf-8'))
                     models = [m.get('name', '') for m in data.get('models', [])]
-                    return True, models, "Ollama online e operacional."
+                    return True, models, "Serviço ativo"
         except urllib.error.URLError as e:
-            return False, [], f"Não foi possível ligar ao Ollama ({e.reason})."
+            return False, [], f"Falha de ligação ({e.reason})"
         except Exception as e:
-            return False, [], f"Erro ao verificar Ollama: {str(e)}"
+            return False, [], f"Erro de comunicação: {str(e)}"
 
-        return False, [], "Ollama indisponível."
+        return False, [], "Serviço indisponível"
 
     def _build_prompt(self, board: Board, personality: str) -> str:
         """Constrói o prompt estruturado para o modelo Ollama."""
@@ -56,18 +56,18 @@ class OllamaAIEngine:
         board_str = board.get_board_visual_str()
         persona_desc = self.PERSONALITIES.get(personality, self.PERSONALITIES["Sarcástico"])
 
-        prompt = f"""Tu és a IA num jogo de Jogo do Galo (Tic-Tac-Toe). O teu símbolo é 'O'. O teu adversário humano é 'X'.
+        prompt = f"""Tu és o jogador 'O' num jogo de Jogo do Galo (Tic-Tac-Toe). O adversário é 'X'.
 {persona_desc}
 
-Estado atual do tabuleiro:
+Tabuleiro atual:
 {board_str}
 
-Casas livres disponíveis (linha, coluna): {available}
+Casas livres (linha, coluna): {available}
 
-INSTRUÇÃO:
-Escolhe uma das casas livres disponíveis e gera uma frase curta em português (máx. 15 palavras) reagindo ao jogo.
-Responde OBRIGATORIAMENTE APENAS em formato JSON válido, sem texto adicional:
-{{"row": <int>, "col": <int>, "comment": "<frase curta>"}}
+Regra estrita:
+Escolhe uma das casas livres e escreve um comentário curto (máx. 12 palavras).
+Responde exclusivamente em formato JSON:
+{{"row": <int>, "col": <int>, "comment": "<comentário>"}}
 """
         return prompt
 
@@ -79,14 +79,13 @@ Responde OBRIGATORIAMENTE APENAS em formato JSON válido, sem texto adicional:
     ) -> Tuple[int, int, str, str]:
         """
         Obtém a jogada da IA.
-        Tenta contactar o Ollama. Se falhar, capturar exceções e usar Minimax como fallback.
+        Tenta contactar o Ollama. Se falhar, utiliza Minimax como contingência.
         Retorna (row, col, comment, engine_used).
         """
         available_moves = board.get_available_moves()
         if not available_moves:
             raise ValueError("Não existem jogadas disponíveis.")
 
-        # Tentativa de obter resposta do Ollama
         try:
             prompt = self._build_prompt(board, personality)
             payload = json.dumps({
@@ -95,8 +94,8 @@ Responde OBRIGATORIAMENTE APENAS em formato JSON válido, sem texto adicional:
                 "stream": False,
                 "format": "json",
                 "options": {
-                    "temperature": 0.4,
-                    "num_predict": 120
+                    "temperature": 0.3,
+                    "num_predict": 100
                 }
             }).encode('utf-8')
 
@@ -106,31 +105,27 @@ Responde OBRIGATORIAMENTE APENAS em formato JSON válido, sem texto adicional:
                 headers={"Content-Type": "application/json"}
             )
 
-            with urllib.request.urlopen(req, timeout=5.0) as resp:
+            with urllib.request.urlopen(req, timeout=4.0) as resp:
                 result = json.loads(resp.read().decode('utf-8'))
                 response_text = result.get('response', '')
 
-                # Parse JSON da resposta
                 data = json.loads(response_text)
                 row = int(data.get('row'))
                 col = int(data.get('col'))
-                comment = str(data.get('comment', 'Estou a calcular o teu próximo erro!'))
+                comment = str(data.get('comment', 'Jogada realizada.'))
 
-                # Validação de regras da jogada devolvida pelo LLM
                 if (row, col) in available_moves:
                     return row, col, comment, f"Ollama ({self.model})"
                 else:
-                    # Se o LLM alucinar uma casa já ocupada, fazemos fallback seguro
                     fallback_r, fallback_c = get_best_move(board, difficulty)
-                    return fallback_r, fallback_c, f"{comment} (Ajuste tático)", f"Ollama+Minimax"
+                    return fallback_r, fallback_c, f"{comment} [Ajuste posicional]", "Ollama+Minimax"
 
-        except Exception as ex:
-            # Tratamento de exceção de conexão/timeout/modelo não encontrado
+        except Exception:
             fallback_r, fallback_c = get_best_move(board, difficulty)
             fallback_comments = {
-                "Sarcástico": "Ollama offline? Sem problema, o algoritmo clássico chega para te vencer!",
-                "Amigável": "O servidor Ollama não respondeu, mas continuo aqui a jogar contigo!",
-                "Científico": "Conexão neural indisponível. A executar subrotina heurística Minimax.",
+                "Sarcástico": "Serviço Ollama indisponível. Jogada calculada por Minimax.",
+                "Amigável": "Sem resposta do Ollama. A utilizar motor Minimax.",
+                "Analítico": "Ollama offline. Heurística Minimax aplicada.",
             }
-            comment = fallback_comments.get(personality, "Modo de contingência Minimax ativo.")
-            return fallback_r, fallback_c, comment, "Minimax (Fallback)"
+            comment = fallback_comments.get(personality, "Minimax ativo.")
+            return fallback_r, fallback_c, comment, "Minimax"

@@ -1,2 +1,4 @@
 match_id,timestamp,player_name,winner,total_moves,difficulty,ai_engine,duration_seconds
 TEST_001,2026-11-01 20:00:00,TestUser,X,5,Imbatível,Minimax,12.5
+844a1859,2026-11-01 21:12:05,Jogador,DRAW,9,Imbatível,Minimax (Fallback),35.7
+TEST_001,2026-11-01 20:00:00,TestUser,X,5,Imbatível,Minimax,12.5

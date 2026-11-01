@@ -1,0 +1,8 @@
+{
+    "player_name": "Jogador",
+    "ollama_model": "llama3.2",
+    "ollama_host": "http://localhost:11434",
+    "personality": "Sarcástico",
+    "difficulty": "Imbatível",
+    "dark_mode": false
+}

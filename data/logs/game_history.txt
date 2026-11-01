@@ -1,0 +1,6 @@
+[2026-11-01 20:00:00] PARTIDA #TEST_001
+  Jogador: TestUser (X) vs IA (Minimax) (O)
+  Resultado: Vitória de X (TestUser)
+  Total de Jogadas: 5
+  Duração: 12.5s
+--------------------------------------------------

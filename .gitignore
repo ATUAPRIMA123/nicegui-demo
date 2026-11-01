@@ -7,3 +7,7 @@ ENV/
 .env
 .idea/
 .vscode/
+
+# SQLite local databases
+*.db
+*.sqlite3
